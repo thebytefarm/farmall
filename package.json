@@ -11,11 +11,15 @@
     "lint": "oxlint",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "validate": "oxfmt --check && oxlint && turbo run typecheck test"
+    "validate": "oxfmt --check && oxlint && turbo run typecheck test",
+    "docs:dev": "ciderpress dev",
+    "docs:build": "ciderpress build",
+    "docs:check": "ciderpress check"
   },
   "devDependencies": {
     "@types/node": "^26.1.0",
     "@typescript/native-preview": "7.0.0-dev.20260707.2",
+    "ciderpress": "1.0.0-rc.4",
     "oxfmt": "^0.58.0",
     "oxlint": "^1.73.0",
     "turbo": "^2.10.4",
