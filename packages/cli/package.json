@@ -1,0 +1,49 @@
+{
+  "name": "farmall",
+  "version": "0.0.1",
+  "description": "One source of truth for all your AI coding agents — sync skills, rules, and subagents across Claude Code, Cursor, Codex, and more, then lint them for cross-platform support. WIP.",
+  "keywords": [
+    "agent",
+    "agents",
+    "agents-md",
+    "ai",
+    "claude-code",
+    "cli",
+    "codex",
+    "cursor",
+    "lint",
+    "llm",
+    "skills",
+    "sync"
+  ],
+  "homepage": "https://github.com/thebytefarm/farmall#readme",
+  "bugs": {
+    "url": "https://github.com/thebytefarm/farmall/issues"
+  },
+  "license": "MIT",
+  "author": "Zac Rosenbauer <me@zrosenbauer.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thebytefarm/farmall.git",
+    "directory": "packages/cli"
+  },
+  "bin": {
+    "farmall": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsgo -p tsconfig.json",
+    "typecheck": "tsgo --noEmit -p tsconfig.json",
+    "dev": "node --watch src/index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0"
+  }
+}
