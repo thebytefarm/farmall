@@ -27,6 +27,42 @@ and lint it so it actually behaves the same on every agent.
 
 Claude Code · Cursor · Codex · Windsurf · Copilot · opencode — more as the ecosystem grows.
 
+## Configuration
+
+`farmall.config.ts` (also `.js`, `.yaml`, `.json`) is the single source of truth for **what's
+supported and how it syncs** — type-safe via `defineConfig`.
+
+- **Targets & platforms** — declare which artifacts sync to which agents.
+- **Per-target args** — output paths, formats, include/exclude globs.
+- **Lint rules** — enable/disable, set severity, and override per platform.
+
+```ts
+// farmall.config.ts
+import { defineConfig } from "farmall";
+
+export default defineConfig({
+  source: ".farmall", // your source of truth
+  platforms: ["claude-code", "cursor", "codex"],
+  sync: {
+    skills: { include: "skills/**" },
+    rules: { format: "agents-md" },
+    subagents: true,
+    agents: false,
+  },
+  lint: {
+    rules: {
+      "trigger-compat": "error",
+      "frontmatter-drift": "warn",
+      portability: "error",
+    },
+    // narrow or relax rules for a specific platform
+    overrides: [{ platform: "codex", rules: { "frontmatter-drift": "off" } }],
+  },
+});
+```
+
+`.yaml` / `.json` take the same shape for anyone who'd rather skip a TS file.
+
 ## Lint (the differentiator)
 
 Everyone can copy files. Nobody checks whether the copy _works_:
@@ -40,6 +76,7 @@ Sync gets config _there_. Lint tells you whether it will _behave_.
 ## Roadmap
 
 - [x] Reserve the name, ship the scaffold + docs.
+- [ ] **`farmall.config.ts`** — declarative support matrix + per-target args + lint overrides.
 - [ ] **`lint` MVP** — cross-platform skill checks (lead with the gap, not the commodity).
 - [ ] **`sync skills` + `sync rules`** — the core loop for the two most common artifacts.
 - [ ] **`init` + `pull`** — adopt into an existing repo without hand-wiring.
