@@ -43,4 +43,4 @@ Part of [thebytefarm](https://github.com/thebytefarm).
 
 ## License
 
-MIT © Zac Rosenbauer
+[MIT](LICENSE)

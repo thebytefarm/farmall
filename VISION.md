@@ -16,16 +16,42 @@ and lint it so it actually behaves the same on every agent.
 
 ## Sync targets
 
-| Target      | Source of truth for                                    |
-| ----------- | ------------------------------------------------------ |
-| `skills`    | reusable agent skills (`SKILL.md` & friends)           |
-| `rules`     | `CLAUDE.md`, `AGENTS.md`, `.cursorrules`, and variants |
-| `subagents` | subagent definitions                                   |
-| `agents`    | agent-level config in each tool's expected location    |
+| Target         | Source of truth for                                                    |
+| -------------- | ---------------------------------------------------------------------- |
+| `instructions` | portable project memory — authored as `AGENTS.md`, projected per agent |
+| `rules`        | scoped rule files with frontmatter/glob activation                     |
+| `skills`       | reusable agent skills (`SKILL.md` & friends)                           |
+| `subagents`    | subagent definitions                                                   |
+| `agents`       | agent-level config in each tool's expected location                    |
+
+`instructions` and `rules` are deliberately separate. Instructions are the portable memory almost
+every agent reads — `AGENTS.md` is the default format, always, and we project it to `CLAUDE.md` and
+the rest. Rules are the scoped, frontmatter-driven files agents load conditionally
+(`.cursor/rules/*.mdc`, `.claude/rules/*.md`, `.devin/rules/*.md`).
 
 ## Platforms
 
-Claude Code · Cursor · Codex · Windsurf · Copilot · opencode — more as the ecosystem grows.
+Claude Code · Cursor · Codex · Copilot · opencode · Devin · pi — more as the ecosystem grows.
+
+## Foundation
+
+We don't rebuild the commodity. Skill loading, source resolution, the git cache, and
+trust validation come from [`@sentry/dotagents-lib`](https://github.com/getsentry/dotagents)
+(MIT, one dependency). It's grammar-agnostic — it knows only source strings, `SKILL.md`,
+and the cache, not `agents.toml` — so we depend on the plumbing without inheriting their
+manifest.
+
+That frees us to spend effort on the parts nobody else does: **lint**, **rules sync**, and
+`pull`. Distribution stays **pure symlink** — one physical `SKILL.md`, every runtime drops
+the frontmatter keys it doesn't know. Lint is what tells you when that bet is wrong for a
+given agent.
+
+The CLI itself is built on [`maltty`](https://github.com/thebytefarm/maltty) — command
+routing, config loading (`defineConfig`), prompts, terminal formatting, YAML, and templating
+for projection all come from the framework, so farmall carries no à-la-carte CLI deps.
+Functional helpers come from [`massaman`](https://www.npmjs.com/package/massaman). Node 24
+built-ins cover the rest (`fs.glob`, `fs.symlink`/`realpath`, `structuredClone`, native
+TS config execution) — no glob, color, or clone libraries.
 
 ## Configuration
 
@@ -44,8 +70,9 @@ export default defineConfig({
   source: ".farmall", // your source of truth
   platforms: ["claude-code", "cursor", "codex"],
   sync: {
+    instructions: { format: "agents-md" },
+    rules: true,
     skills: { include: "skills/**" },
-    rules: { format: "agents-md" },
     subagents: true,
     agents: false,
   },
@@ -76,9 +103,10 @@ Sync gets config _there_. Lint tells you whether it will _behave_.
 ## Roadmap
 
 - [x] Reserve the name, ship the scaffold + docs.
+- [ ] **Adopt `@sentry/dotagents-lib`** — reuse SKILL.md loading, source resolution, git cache, and trust.
 - [ ] **`farmall.config.ts`** — declarative support matrix + per-target args + lint overrides.
 - [ ] **`lint` MVP** — cross-platform skill checks (lead with the gap, not the commodity).
-- [ ] **`sync skills` + `sync rules`** — the core loop for the two most common artifacts.
+- [ ] **`sync skills` + `sync instructions`** — the core loop for the two most common artifacts.
 - [ ] **`init` + `pull`** — adopt into an existing repo without hand-wiring.
 - [ ] **`sync subagents`** — the still-experimental-everywhere target, done well.
 - [ ] **`check` / `diff`** — safe dry-runs and drift visibility.

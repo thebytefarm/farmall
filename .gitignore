@@ -5,6 +5,7 @@ dist
 *.log
 .DS_Store
 coverage
+.scratchpad/*
 
 # ciderpress (ignore generated content, keep public assets)
 **/.ciderpress/*

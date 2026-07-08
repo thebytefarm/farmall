@@ -21,7 +21,6 @@
     "url": "https://github.com/thebytefarm/farmall/issues"
   },
   "license": "MIT",
-  "author": "Zac Rosenbauer <me@zrosenbauer.com>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thebytefarm/farmall.git",
@@ -44,6 +43,11 @@
     "dev": "node --watch src/index.ts"
   },
   "devDependencies": {
-    "@types/node": "^26.1.0"
+    "@types/node": "^26.1.0",
+    "type-fest": "^5.8.0"
+  },
+  "dependencies": {
+    "maltty": "1.0.0-rc.0",
+    "massaman": "^0.3.0"
   }
 }

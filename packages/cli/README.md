@@ -50,4 +50,4 @@ Early and intentionally minimal. Follow along — the real commands land soon.
 
 ## License
 
-MIT © Zac Rosenbauer
+[MIT](LICENSE)

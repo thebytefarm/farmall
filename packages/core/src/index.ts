@@ -9,17 +9,18 @@ export const ok = <T>(value: T): Result<T, never> => ({ ok: true, value });
 export const err = <E>(error: E): Result<never, E> => ({ ok: false, error });
 
 /** What the CLI can push out to agent platforms. */
-export const SYNC_TARGETS = ["skills", "rules", "subagents", "agents"] as const;
+export const SYNC_TARGETS = ["instructions", "rules", "skills", "subagents", "agents"] as const;
 export type SyncTarget = (typeof SYNC_TARGETS)[number];
 
 /** Agent platforms we aim to keep in sync. */
 export const PLATFORMS = [
   "claude-code",
   "cursor",
-  "windsurf",
-  "copilot",
   "codex",
+  "copilot",
   "opencode",
+  "devin",
+  "pi",
 ] as const;
 export type Platform = (typeof PLATFORMS)[number];
 
