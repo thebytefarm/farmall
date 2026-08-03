@@ -35,6 +35,9 @@ importers:
 
   packages/cli:
     dependencies:
+      '@farmall/core':
+        specifier: workspace:*
+        version: link:../core
       maltty:
         specifier: 1.0.0-rc.0
         version: 1.0.0-rc.0(chokidar@5.0.0)(giget@3.3.0)(ink@7.1.0(@types/react@19.2.17)(react@19.2.7))(jiti@2.7.0)(react@19.2.7)(vitest@3.2.7(@types/debug@4.1.13)(@types/node@26.1.0)(jiti@2.7.0)(yaml@2.9.0))

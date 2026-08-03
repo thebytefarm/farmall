@@ -88,5 +88,5 @@ Not used in this repo — reach for the replacement instead:
 ## References
 
 - [Architecture](./architecture.md) — how these tools fit together
-- [Getting Started](../guides/getting-started.md) — the setup and develop loop
+- [Getting Started](../getting-started.md) — the setup and develop loop
 - [maltty contributing standards](https://github.com/thebytefarm/maltty/tree/main/contributing/standards) — the canonical TypeScript/Git/docs rules

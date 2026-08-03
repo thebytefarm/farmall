@@ -25,11 +25,12 @@ solved well by tools like [rulesync](https://github.com/dyoshikawa/rulesync) and
 
 ## How it works
 
-One source-of-truth directory (`.farmall/` by default). You author instructions once as `AGENTS.md` —
-the format nearly every agent reads — plus your rules, skills, and subagents. `farmall sync` projects
-them into each agent's expected location by **symlink**, so there's one physical file to edit and
-nothing to drift. `farmall lint` then checks whether that one file behaves on every agent it's linked
-into. See the [Overview](../concepts/overview.md) for the full model.
+You author instructions once as `AGENTS.md` — the format nearly every agent reads — at the repo root
+and nested wherever you want directory-scoped memory. Your rules, skills, and subagents live under one
+source directory (`.farmall/` by default). `farmall sync` projects everything into each agent's
+expected location by **symlink**, so there's one physical file to edit and nothing to drift.
+`farmall lint` then checks whether that one file behaves on every agent it's linked into. See the
+[Overview](../concepts/overview.md) for the full model.
 
 ## Status
 

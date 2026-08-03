@@ -35,9 +35,12 @@ The short version of the rules the toolchain enforces:
 - [Architecture](./concepts/architecture.md) — package ecosystem, the source-of-truth → sync → lint pipeline, the `@sentry/dotagents-lib` foundation
 - [Tech Stack](./concepts/tech-stack.md) — toolchain reference: pnpm, turbo, tsgo, oxlint, oxfmt, vitest, ciderpress
 
+### Getting Started
+
+- [Getting Started](./getting-started.md) — local setup, scripts, reading order, branch conventions
+
 ### Guides
 
-- [Getting Started](./guides/getting-started.md) — local setup, scripts, reading order, branch conventions
 - [Adding a CLI Command](./guides/adding-a-cli-command.md) — end-to-end walkthrough for a new `farmall` subcommand
 
 ## References

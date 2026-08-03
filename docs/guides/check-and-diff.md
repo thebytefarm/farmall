@@ -29,7 +29,7 @@ farmall check — .farmall → 4 platforms
 
   would create
     .cursor/skills/review-pr/SKILL.md   → .farmall/skills/review-pr/SKILL.md
-    .github/copilot-instructions.md     → .farmall/AGENTS.md
+    .github/copilot-instructions.md     → AGENTS.md
 
   would prune
     .claude/rules/legacy.md             (source removed)

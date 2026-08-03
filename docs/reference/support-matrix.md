@@ -15,7 +15,7 @@ can't land at all. This table is the ground truth [`lint`](../concepts/lint.md) 
 
 ## Instructions
 
-Authored once as `.farmall/AGENTS.md`, projected per agent.
+Authored as `AGENTS.md` in the working tree (root and nested), projected per agent at each level.
 
 | Platform    | Location                          |
 | ----------- | --------------------------------- |

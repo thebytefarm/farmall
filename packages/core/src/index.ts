@@ -1,4 +1,4 @@
-export const FARMALL_VERSION = "0.0.0" as const;
+export const FARMALL_VERSION = "0.0.1" as const;
 
 /** Local Result until we wire in massaman's `Result<T, E>`. */
 export type Result<T, E = string> =
@@ -8,26 +8,24 @@ export type Result<T, E = string> =
 export const ok = <T>(value: T): Result<T, never> => ({ ok: true, value });
 export const err = <E>(error: E): Result<never, E> => ({ ok: false, error });
 
-/** What the CLI can push out to agent platforms. */
-export const SYNC_TARGETS = ["instructions", "rules", "skills", "subagents", "agents"] as const;
-export type SyncTarget = (typeof SYNC_TARGETS)[number];
+export * from "./types.ts";
+export * from "./config.ts";
+export * from "./matrix.ts";
+export * from "./inventory.ts";
+export * from "./plan.ts";
+export * from "./lint.ts";
 
-/** Agent platforms we aim to keep in sync. */
-export const PLATFORMS = [
-  "claude-code",
-  "cursor",
-  "codex",
-  "copilot",
-  "opencode",
-  "devin",
-  "pi",
-] as const;
-export type Platform = (typeof PLATFORMS)[number];
+import type { Target } from "./types.ts";
+import { isTarget } from "./types.ts";
 
-export const isSyncTarget = (value: string): value is SyncTarget =>
-  (SYNC_TARGETS as readonly string[]).includes(value);
+/** @deprecated legacy alias for {@link Target}. */
+export type SyncTarget = Target;
 
-export const sync = (target: SyncTarget): Result<string> =>
-  ok(`sync ${target} — not implemented yet`);
+/** @deprecated legacy alias — use {@link isTarget}. */
+export const isSyncTarget = (value: string): value is Target => isTarget(value);
 
+/** @deprecated legacy stub — real projection lives in the CLI commands now. */
+export const sync = (target: Target): Result<string> => ok(`sync ${target} — not implemented yet`);
+
+/** @deprecated legacy stub. */
 export const lintSkills = (): Result<string> => ok("lint skills — not implemented yet");

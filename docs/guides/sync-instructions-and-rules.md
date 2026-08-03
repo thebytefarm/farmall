@@ -8,33 +8,36 @@ Instructions and rules are two different targets. Author your always-on memory o
 
 The distinction people miss: **instructions and rules are separate targets**, and nearly every agent now supports both — separately.
 
-|                      | instructions         | rules                      |
-| -------------------- | -------------------- | -------------------------- |
-| **Cardinality**      | one file             | many files                 |
-| **Activation**       | always loaded        | frontmatter/glob-scoped    |
-| **Canonical format** | `AGENTS.md`, always  | agent-specific frontmatter |
-| **Source**           | `.farmall/AGENTS.md` | `.farmall/rules/*.md`      |
+|                      | instructions              | rules                      |
+| -------------------- | ------------------------- | -------------------------- |
+| **Cardinality**      | one per level (nestable)  | many files                 |
+| **Activation**       | always loaded             | frontmatter/glob-scoped    |
+| **Canonical format** | `AGENTS.md`, always       | agent-specific frontmatter |
+| **Source**           | `AGENTS.md` (root+nested) | `<source>/rules/*.md`      |
 
 **Instructions** are the always-on project memory — one document read at the start of every session. **Rules** are scoped files with frontmatter that decides _when_ they apply: glob-attached to paths, model-requested on demand, or manually invoked.
 
-## Author instructions once as AGENTS.md
+## Author instructions as AGENTS.md — the base, always
 
-`AGENTS.md` is the default instruction format, always. It's the open standard nearly every agent reads natively, so it's the least-lossy thing to author against. Write it once:
-
-```
-.farmall/AGENTS.md
-```
-
-`farmall sync instructions` projects that one file to each agent's expected filename — never the reverse:
+`AGENTS.md` is the default instruction format, always. It's the open standard nearly every agent reads natively, so it's the least-lossy thing to author against. It lives in the working tree — at the repo root, and nested wherever you want directory-scoped memory. It is never moved into the source directory:
 
 ```
-.farmall/AGENTS.md
-  CLAUDE.md                          → symlink   (Claude Code)
-  .github/copilot-instructions.md    → symlink   (Copilot)
-  AGENTS.md                          → symlink   (Cursor, Codex, opencode, Devin, pi read it directly)
+AGENTS.md                   root instructions
+packages/api/AGENTS.md      scoped to packages/api
 ```
 
-Same content, different filename. The CLAUDE.md your Claude Code picks up is a link to `AGENTS.md`.
+`farmall sync instructions` projects each `AGENTS.md` to the other agents' filenames **next to it** — never the reverse:
+
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'primaryColor':'#fef2f2','primaryBorderColor':'#dc2626','primaryTextColor':'#450a0a','lineColor':'#b91c1c','fontFamily':'inherit'}}}%%
+flowchart LR
+  SRC["AGENTS.md<br/>you author this"]
+  SRC -->|symlink| CC["CLAUDE.md<br/>Claude Code"]
+  SRC -->|symlink| GH[".github/copilot-instructions.md<br/>Copilot"]
+  SRC -.->|read directly| RD["Cursor · Codex · opencode · Devin · pi<br/>no link needed"]
+```
+
+Same content, different filename. The CLAUDE.md your Claude Code picks up is a link to the `AGENTS.md` beside it. A nested `packages/api/AGENTS.md` projects to `packages/api/CLAUDE.md`.
 
 Instructions land here per platform ([support matrix](../reference/support-matrix.md#instructions)):
 
@@ -63,12 +66,14 @@ Prefer factory functions over classes. Never mutate arguments...
 
 `farmall sync rules` projects each file to the agents that have a rules system:
 
-```
-.farmall/rules/typescript.md
-  .claude/rules/typescript.md                        → symlink   (Claude Code)
-  .cursor/rules/typescript.mdc                       → symlink   (Cursor)
-  .github/instructions/typescript.instructions.md    → symlink   (Copilot)
-  .devin/rules/typescript.md                         → symlink   (Devin)
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'primaryColor':'#fef2f2','primaryBorderColor':'#dc2626','primaryTextColor':'#450a0a','lineColor':'#b91c1c','fontFamily':'inherit'}}}%%
+flowchart LR
+  SRC[".farmall/rules/typescript.md"]
+  SRC -->|symlink| CC[".claude/rules/typescript.md<br/>Claude Code"]
+  SRC -->|symlink| CU[".cursor/rules/typescript.mdc<br/>Cursor"]
+  SRC -->|symlink| CP[".github/instructions/typescript.instructions.md<br/>Copilot"]
+  SRC -->|symlink| DV[".devin/rules/typescript.md<br/>Devin"]
 ```
 
 Rules land — or don't — per platform ([support matrix](../reference/support-matrix.md#rules)):

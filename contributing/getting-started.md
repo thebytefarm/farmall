@@ -2,7 +2,7 @@
 
 Set up your local environment to contribute to farmall.
 
-> **Status: WIP.** The tool doesn't sync anything yet — the CLI is a stub and `@farmall/core` returns placeholders. You're contributing to the scaffold, toolchain, docs, and (soon) the engine. See [Architecture](../concepts/architecture.md) for what's built vs planned.
+> **Status: WIP.** The tool doesn't sync anything yet — the CLI is a stub and `@farmall/core` returns placeholders. You're contributing to the scaffold, toolchain, docs, and (soon) the engine. See [Architecture](./concepts/architecture.md) for what's built vs planned.
 
 ## Prerequisites
 
@@ -48,7 +48,7 @@ pnpm validate    # oxfmt --check && oxlint && turbo run typecheck test
 pnpm --filter farmall dev
 ```
 
-The CLI is a placeholder today — `farmall --help` prints the planned command surface and any real subcommand replies that it isn't wired up yet. That entrypoint is what you extend when [adding a command](./adding-a-cli-command.md).
+The CLI is a placeholder today — `farmall --help` prints the planned command surface and any real subcommand replies that it isn't wired up yet. That entrypoint is what you extend when [adding a command](./guides/adding-a-cli-command.md).
 
 ### 6. Run the docs site (optional)
 
@@ -63,9 +63,9 @@ pnpm docs:check    # validate links and config
 Read in this order:
 
 1. [`VISION.md`](https://github.com/thebytefarm/farmall/blob/main/VISION.md) — the product spec: commands, sync targets, platforms, the config file, and why lint is the differentiator
-2. [`contributing/concepts/architecture.md`](../concepts/architecture.md) — package ecosystem and the source-of-truth → sync → lint pipeline
-3. [`contributing/concepts/tech-stack.md`](../concepts/tech-stack.md) — the toolchain and root scripts
-4. [`docs/concepts/`](../../docs/concepts/overview.md) — the product-facing concept pages (overview, targets, sync, lint, platforms) for context on what the tool will do
+2. [`contributing/concepts/architecture.md`](./concepts/architecture.md) — package ecosystem and the source-of-truth → sync → lint pipeline
+3. [`contributing/concepts/tech-stack.md`](./concepts/tech-stack.md) — the toolchain and root scripts
+4. [`docs/concepts/`](../docs/concepts/overview.md) — the product-facing concept pages (overview, targets, sync, lint, platforms) for context on what the tool will do
 
 ## Scripts Reference
 
@@ -140,7 +140,7 @@ corepack enable
 
 ## References
 
-- [Architecture](../concepts/architecture.md)
-- [Tech Stack](../concepts/tech-stack.md)
-- [Adding a CLI Command](./adding-a-cli-command.md)
+- [Architecture](./concepts/architecture.md)
+- [Tech Stack](./concepts/tech-stack.md)
+- [Adding a CLI Command](./guides/adding-a-cli-command.md)
 - [VISION.md](https://github.com/thebytefarm/farmall/blob/main/VISION.md)

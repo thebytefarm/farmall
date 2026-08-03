@@ -36,12 +36,17 @@ export default defineConfig({
 
 ## Fields
 
-| Field       | Type                       | Default       | Purpose                                     |
-| ----------- | -------------------------- | ------------- | ------------------------------------------- |
-| `source`    | `string`                   | `.farmall`    | The source-of-truth directory.              |
-| `platforms` | `Platform[]`               | —             | Which agents to sync to.                    |
-| `sync`      | `Record<Target, SyncSpec>` | all `true`    | Which targets sync, and how.                |
-| `lint`      | `{ rules, overrides? }`    | rule defaults | Rule severities and per-platform overrides. |
+| Field       | Type                       | Default       | Purpose                                               |
+| ----------- | -------------------------- | ------------- | ----------------------------------------------------- |
+| `source`    | `string`                   | `.farmall`    | The one source directory for non-instruction targets. |
+| `platforms` | `Platform[]`               | —             | Which agents to sync to.                              |
+| `sync`      | `Record<Target, SyncSpec>` | all `true`    | Which targets sync, and how.                          |
+| `lint`      | `{ rules, overrides? }`    | rule defaults | Rule severities and per-platform overrides.           |
+
+`source` is a single directory — pick one of `.farmall` (default), `.agents`, `./skills`, or a custom
+path. `farmall` reads rules, skills, subagents, and agents from that one root; it never merges across
+several. Instructions are the exception — they live as `AGENTS.md` in the tree (root and nested), not
+under `source`. See [Define Once](./define-once.md#pick-one-source-never-merged).
 
 See the [config reference](../reference/config.md) for the full type.
 

@@ -10,11 +10,13 @@
 For every target file and every platform, `farmall` creates a symlink from the agent's expected path
 back to the one physical file in `.farmall/`.
 
-```
-.farmall/skills/review-pr/SKILL.md      ← the only real file
-  .claude/skills/review-pr/SKILL.md      → symlink
-  .cursor/skills/review-pr/SKILL.md      → symlink
-  .agents/skills/review-pr/SKILL.md      → symlink
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'primaryColor':'#fef2f2','primaryBorderColor':'#dc2626','primaryTextColor':'#450a0a','lineColor':'#b91c1c','fontFamily':'inherit'}}}%%
+flowchart LR
+  SRC[".farmall/skills/review-pr/SKILL.md<br/>the only real file"]
+  SRC -->|symlink| A[".claude/skills/review-pr/SKILL.md"]
+  SRC -->|symlink| B[".cursor/skills/review-pr/SKILL.md"]
+  SRC -->|symlink| C[".agents/skills/review-pr/SKILL.md"]
 ```
 
 This is the distribution model inherited from [dotagents](https://github.com/getsentry/dotagents):
@@ -28,16 +30,23 @@ Because there's one physical file, every runtime reads the _same_ frontmatter. T
 chokes on a foreign key, or silently ignores one you depend on — that's not a sync failure, it's a
 _behavior_ failure. Catching it is [lint's](./lint.md) job, not sync's.
 
-## Instructions: link across formats
+## Instructions: link across formats, in place
 
-Instructions are plain markdown under different names, so the projection is still a symlink:
+Instructions live as `AGENTS.md` in the working tree — root, and nested at any level. They're plain
+markdown under different names, so the projection is a symlink written **next to** each `AGENTS.md`,
+never pulled into the source directory:
 
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'primaryColor':'#fef2f2','primaryBorderColor':'#dc2626','primaryTextColor':'#450a0a','lineColor':'#b91c1c','fontFamily':'inherit'}}}%%
+flowchart LR
+  SRC["AGENTS.md<br/>the base — you author this"]
+  SRC -->|symlink| CC["CLAUDE.md<br/>Claude Code"]
+  SRC -->|symlink| GH[".github/copilot-instructions.md<br/>Copilot"]
+  SRC -.->|read directly| RD["Cursor · Codex · opencode · Devin · pi<br/>no link needed"]
 ```
-.farmall/AGENTS.md
-  CLAUDE.md                              → symlink   (Claude Code)
-  .github/copilot-instructions.md        → symlink   (Copilot)
-  AGENTS.md                              → symlink   (Cursor, Codex, opencode, Devin, pi read it directly)
-```
+
+Nested instructions project at their own level — `packages/api/AGENTS.md` →
+`packages/api/CLAUDE.md`.
 
 ## Running it
 

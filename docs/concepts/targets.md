@@ -7,11 +7,15 @@ per agent, and a set of lint checks.
 
 | Target         | Source                       | Nature                                  |
 | -------------- | ---------------------------- | --------------------------------------- |
-| `instructions` | `.farmall/AGENTS.md`         | one portable memory file, always-on     |
-| `rules`        | `.farmall/rules/*.md`        | many scoped files, conditionally loaded |
-| `skills`       | `.farmall/skills/*/SKILL.md` | reusable capability bundles             |
-| `subagents`    | `.farmall/subagents/*.md`    | named delegate agents                   |
-| `agents`       | `.farmall/agents/*`          | agent-level config / model selection    |
+| `instructions` | `AGENTS.md` (root + nested)  | one portable memory file, always-on     |
+| `rules`        | `<source>/rules/*.md`        | many scoped files, conditionally loaded |
+| `skills`       | `<source>/skills/*/SKILL.md` | reusable capability bundles             |
+| `subagents`    | `<source>/subagents/*.md`    | named delegate agents                   |
+| `agents`       | `<source>/agents/*`          | agent-level config / model selection    |
+
+`instructions` are special: they live as `AGENTS.md` in the working tree (root, and nestable at any
+directory level), never inside the source directory. Every other target reads from a single
+[`source`](./define-once.md#pick-one-source-never-merged) — `.farmall/` by default.
 
 ## Instructions vs rules
 

@@ -248,10 +248,10 @@ export default defineConfig({
       nav: { island: true },
       pages: [
         {
-          title: "Overview",
-          description: "How the contributing docs are organized.",
-          path: "/contributing",
-          include: "contributing/README.md",
+          title: "Getting Started",
+          description: "Set up your local environment and the develop loop.",
+          path: "/contributing/getting-started",
+          include: "contributing/getting-started.md",
         },
         {
           title: "Concepts",
@@ -273,11 +273,6 @@ export default defineConfig({
           title: "Guides",
           path: "/contributing/guides",
           pages: [
-            {
-              title: "Getting Started",
-              path: "/contributing/guides/getting-started",
-              include: "contributing/guides/getting-started.md",
-            },
             {
               title: "Adding a CLI Command",
               path: "/contributing/guides/adding-a-cli-command",

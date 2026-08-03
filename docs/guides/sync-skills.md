@@ -36,11 +36,13 @@ farmall sync skills
 
 `sync` creates one symlink per configured platform, each pointing back at the single physical directory in `.farmall/`:
 
-```
-.farmall/skills/review-pr/SKILL.md      ← the only real file
-  .claude/skills/review-pr/SKILL.md      → symlink
-  .cursor/skills/review-pr/SKILL.md      → symlink
-  .agents/skills/review-pr/SKILL.md      → symlink
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'primaryColor':'#fef2f2','primaryBorderColor':'#dc2626','primaryTextColor':'#450a0a','lineColor':'#b91c1c','fontFamily':'inherit'}}}%%
+flowchart LR
+  SRC[".farmall/skills/review-pr/SKILL.md<br/>the only real file"]
+  SRC -->|symlink| A[".claude/skills/review-pr/SKILL.md"]
+  SRC -->|symlink| B[".cursor/skills/review-pr/SKILL.md"]
+  SRC -->|symlink| C[".agents/skills/review-pr/SKILL.md"]
 ```
 
 There's exactly one file to edit. Change `SKILL.md` and every agent reads the change immediately — there's nothing to re-sync until you add or remove a skill or a platform.

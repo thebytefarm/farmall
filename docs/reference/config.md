@@ -26,12 +26,16 @@ interface FarmallConfig {
 }
 ```
 
-| Field       | Type                                | Default     | Description                    |
-| ----------- | ----------------------------------- | ----------- | ------------------------------ |
-| `source`    | `string`                            | `.farmall`  | Source-of-truth directory.     |
-| `platforms` | `Platform[]`                        | —           | Agents to sync to (required).  |
-| `sync`      | `Partial<Record<Target, SyncSpec>>` | all enabled | Per-target sync behavior.      |
-| `lint`      | `LintConfig`                        | defaults    | Rule severities and overrides. |
+| Field       | Type                                | Default     | Description                                                 |
+| ----------- | ----------------------------------- | ----------- | ----------------------------------------------------------- |
+| `source`    | `string`                            | `.farmall`  | The one source directory for rules/skills/subagents/agents. |
+| `platforms` | `Platform[]`                        | —           | Agents to sync to (required).                               |
+| `sync`      | `Partial<Record<Target, SyncSpec>>` | all enabled | Per-target sync behavior.                                   |
+| `lint`      | `LintConfig`                        | defaults    | Rule severities and overrides.                              |
+
+`source` is a single root — one of `.farmall` (default), `.agents`, `./skills`, or a custom path,
+never several at once. It does not cover `instructions`, which are read from `AGENTS.md` in the working
+tree (root and nested).
 
 ## `Platform`
 

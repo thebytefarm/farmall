@@ -34,6 +34,14 @@
     "README.md"
   ],
   "type": "module",
+  "main": "./dist/lib.js",
+  "types": "./dist/lib.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/lib.d.ts",
+      "default": "./dist/lib.js"
+    }
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -47,6 +55,7 @@
     "type-fest": "^5.8.0"
   },
   "dependencies": {
+    "@farmall/core": "workspace:*",
     "maltty": "1.0.0-rc.0",
     "massaman": "^0.3.0"
   }

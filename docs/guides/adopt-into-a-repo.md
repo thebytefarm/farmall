@@ -39,7 +39,7 @@ farmall pull --dry-run     # inspect first
 farmall pull
 ```
 
-`pull` reads what each configured platform already has on disk and consolidates it under `source`. For each [target](../concepts/targets.md) it picks the least-lossy existing copy — `AGENTS.md` over the CLAUDE.md fork for instructions — and moves it into `.farmall/`, de-duplicating copies that are the same artifact under different names.
+`pull` reads what each configured platform already has on disk and consolidates it. Instructions collapse to a single canonical `AGENTS.md` in the working tree (root, and nested where they already exist) — it picks the least-lossy fork, e.g. `AGENTS.md` over an older `CLAUDE.md`. Every other target — rules, skills, subagents, agents — moves under `source` (`.farmall/` by default), de-duplicating copies that are the same artifact under different names.
 
 Scope it to one platform when you only trust one source:
 
@@ -51,26 +51,31 @@ farmall pull skills --platform claude-code
 
 ```
 your-repo/
+  AGENTS.md                        one canonical instructions file, in the tree
   .farmall/
-    AGENTS.md                      one instructions file, canonical
     rules/typescript.md            one rule, portable markdown
     skills/review-pr/SKILL.md      one skill directory
   farmall.config.ts
 ```
 
-The scattered copies are gone from the source's perspective — the next [`sync`](../concepts/sync.md) replaces them with symlinks back into `.farmall/`:
+The scattered copies are gone from the source's perspective — the next [`sync`](../concepts/sync.md) replaces them with symlinks back to the canonical file:
 
 ```bash
 farmall sync
 ```
 
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'primaryColor':'#fef2f2','primaryBorderColor':'#dc2626','primaryTextColor':'#450a0a','lineColor':'#b91c1c','fontFamily':'inherit'}}}%%
+flowchart LR
+  AG["AGENTS.md<br/>canonical instructions"]
+  RL[".farmall/rules/typescript.md<br/>canonical rule"]
+  AG -->|symlink| CLA["CLAUDE.md"]
+  AG -->|symlink| COP[".github/copilot-instructions.md"]
+  RL -->|symlink| CR[".claude/rules/typescript.md"]
+  RL -->|symlink| UR[".cursor/rules/typescript.mdc"]
 ```
-CLAUDE.md                          → .farmall/AGENTS.md
-AGENTS.md                          → .farmall/AGENTS.md
-.github/copilot-instructions.md    → .farmall/AGENTS.md
-.claude/rules/typescript.md        → .farmall/rules/typescript.md
-.cursor/rules/typescript.mdc       → .farmall/rules/typescript.md
-```
+
+(Cursor, Codex, opencode, Devin, and pi read `AGENTS.md` directly, so there's no link to write for them.)
 
 From here you edit one file and every agent sees the change. Run [`farmall check`](./check-and-diff.md) before committing to confirm the link tree matches config, and [`farmall lint`](./write-a-portable-skill.md) to catch anything that won't behave across the platforms you pulled from.
 

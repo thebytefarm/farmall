@@ -34,40 +34,31 @@ The CLI depends on [`maltty`](https://github.com/thebytefarm/maltty) (the ByteFa
 
 ## The Pipeline
 
-The product is three stages over one source directory (`.farmall/` by default):
+The product is three stages over the source of truth. Instructions live as `AGENTS.md` in the working
+tree (root and nestable); every other target lives under one configurable source directory (`source`,
+`.farmall/` by default — one of `.farmall`, `.agents`, or `./skills`, never merged):
 
-```
-                    ┌──────────────────────────────────────────┐
-                    │  .farmall/  (the one source of truth)      │
-                    │  instructions · rules · skills ·           │
-                    │  subagents · agents                        │
-                    └──────────────────────────────────────────┘
-                            │                        ▲
-              (1) pull      │                        │  authored by you
-              import        │                        │
-              existing ─────┘                        │
-              per-agent config                       │
-                            │
-                            ▼
-                    ┌──────────────────┐
-              (2)   │   sync (symlink) │   one physical file, many links —
-              sync  │   projection      │   never a second copy to drift
-                    └──────────────────┘
-                            │
-             ┌──────────────┼──────────────┬──────────────┬──────────────┐
-             ▼              ▼               ▼              ▼              ▼
-        .claude/       .cursor/        .codex/        AGENTS.md      .github/...
-        (Claude Code)  (Cursor)        (Codex)        (opencode…)    (Copilot)
-             │              │               │              │              │
-             └──────────────┴───────┬───────┴──────────────┴──────────────┘
-                                     ▼
-                            ┌──────────────────┐
-                      (3)   │       lint       │   does the projected config
-                      lint  │  cross-platform  │   actually *behave* on each agent?
-                            └──────────────────┘
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'primaryColor':'#fef2f2','primaryBorderColor':'#dc2626','primaryTextColor':'#450a0a','lineColor':'#b91c1c','fontFamily':'inherit'}}}%%
+flowchart TB
+  SRC["source of truth<br/>AGENTS.md (root + nested) · &lt;source&gt;/<br/>instructions · rules · skills · subagents · agents"]
+  YOU["you"] -->|authored by you| SRC
+  EXIST["existing per-agent config"] -->|"(1) pull — import"| SRC
+  SRC -->|"(2) sync"| SYNC["sync (symlink) projection<br/>one physical file, many links — never a second copy to drift"]
+  SYNC --> CC[".claude/<br/>Claude Code"]
+  SYNC --> CU[".cursor/<br/>Cursor"]
+  SYNC --> CX[".codex/<br/>Codex"]
+  SYNC --> AG["AGENTS.md<br/>opencode, Codex, Cursor, Devin, pi"]
+  SYNC --> GH[".github/…<br/>Copilot"]
+  CC --> LINT
+  CU --> LINT
+  CX --> LINT
+  AG --> LINT
+  GH --> LINT
+  LINT["(3) lint — cross-platform<br/>does the projected config actually behave on each agent?"]
 ```
 
-1. **`pull`** — import config that already exists per-agent back into `.farmall/`, so you can adopt farmall without hand-wiring an existing repo.
+1. **`pull`** — import config that already exists per-agent back into the source of truth (instructions to a canonical `AGENTS.md`, everything else under `source`), so you can adopt farmall without hand-wiring an existing repo.
 2. **`sync`** — project the source out to each agent's expected path as a **symlink**. One physical `SKILL.md`; each runtime reads the same file and drops the frontmatter keys it doesn't understand. Sync is idempotent and never writes into the source directory. See [docs/concepts/sync.md](../../docs/concepts/sync.md).
 3. **`lint`** — the differentiator. Everyone can copy files; nobody checks whether the copy _works_. Lint answers trigger compatibility, frontmatter drift, and portability per platform. See [docs/concepts/lint.md](../../docs/concepts/lint.md).
 

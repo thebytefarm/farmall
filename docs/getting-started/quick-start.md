@@ -19,8 +19,9 @@ npx farmall --help
 farmall init
 ```
 
-Creates `.farmall/` and a typed `farmall.config.ts`. Author your instructions once as
-`.farmall/AGENTS.md`, drop rules under `.farmall/rules/`, skills under `.farmall/skills/`.
+Creates `.farmall/` and a typed `farmall.config.ts`. Author your instructions as `AGENTS.md` at the
+repo root (nest more `AGENTS.md` files wherever you want), and drop rules under `.farmall/rules/`,
+skills under `.farmall/skills/`.
 
 ### 2. Declare your platforms
 
