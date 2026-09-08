@@ -1,52 +1,41 @@
-<div align="center">
-  <img src="https://placehold.co/1200x300/0d1117/e6edf3?text=farmall" alt="farmall" width="90%" />
-  <p><strong>Farm all your agents.</strong></p>
-  <p>One source of truth for every AI coding agent — sync skills, rules & subagents, then lint them for cross-platform support.</p>
+# farmall
 
-<a href="https://www.npmjs.com/package/farmall"><img src="https://img.shields.io/npm/v/farmall" alt="npm version" /></a>
-<a href="https://github.com/thebytefarm/farmall/blob/main/LICENSE"><img src="https://img.shields.io/github/license/thebytefarm/farmall" alt="License" /></a>
+Command-line interface for compiling portable agent artifacts into platform-native files.
 
-<a href="https://github.com/thebytefarm/farmall/tree/main/docs">📖 Documentation</a> &nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp; <a href="https://github.com/thebytefarm/farmall/issues">🐛 Issues</a>
-
-</div>
-
-> **Status: WIP / placeholder release.** This reserves the name while the tool grows. Nothing syncs yet.
-
-One source of truth for **all** your AI coding agents.
-
-`farmall` keeps your **skills**, **rules**, and **subagents** in sync across Claude Code, Cursor,
-Codex, Windsurf, Copilot, and opencode — then **lints them for cross-platform support**, so a skill
-you write once actually _triggers_ everywhere instead of silently dropping fields on the agents that
-don't understand them.
-
-The sync problem is largely solved by great tools (rulesync, ruler). The part nobody does well yet —
-and the reason this exists — is the **cross-agent quality/compat layer**: will this skill fire on
-Codex the way it does on Claude, and which frontmatter fields get quietly ignored per agent?
-
-## Why "farmall"?
-
-The original Farmall tractor (International Harvester, 1924) earned its name because it could _farm
-all_ the jobs on a farm — not just one. Same energy here: one tool that tends **all** your agents,
-not some.
-
-> We don't ~~farm~~ **agent** some.
-> We ~~farm~~ **agent** all.
-
-And it lives in the same yard as the rest of [thebytefarm](https://github.com/thebytefarm).
-
-## Planned commands
+## Install
 
 ```bash
-farmall sync skills      # sync skills out to every platform
-farmall sync rules       # sync rules (CLAUDE.md / AGENTS.md / .cursorrules / ...)
-farmall sync subagents   # sync subagent definitions
-farmall sync agents      # sync agents to each agent's config
-farmall lint             # lint skills for cross-platform support
+npm install --global farmall
 ```
 
-## Status
+Version `0.0.2` implements `init`, `pull`, `sync`, `lint`, `check`, and `diff`.
 
-Early and intentionally minimal. Follow along — the real commands land soon.
+## Quick use
+
+```bash
+farmall init
+farmall check
+farmall sync
+```
+
+The generated config reads normalized files from `agent-config/`, lints skills, and writes supported artifacts to Claude Code, Cursor, Codex, Copilot, opencode, Windsurf, Devin, and pi paths. Unsupported artifact kinds produce diagnostics and no output for that mapping.
+
+Use `agent-config/outputs/<output>/...` for native files such as settings JSON, executables, or binary assets. Farmall copies exact bytes and POSIX permission modes to the output with the matching name. It does not translate settings between platforms. JSON output represents byte bodies as `{ "encoding": "base64", "data": "..." }`; terminal diffs show binary byte counts and SHA-256 digests instead of decoded content.
+
+## Commands
+
+| Command                   | Behavior                                                                          |
+| ------------------------- | --------------------------------------------------------------------------------- |
+| `farmall init [--json]`   | Create `farmall.config.mjs` and `agent-config/README.md` with create-only writes. |
+| `farmall pull [options]`  | Run the `pull` pipeline by default and apply its import plan.                     |
+| `farmall sync [options]`  | Run and apply the selected pipeline.                                              |
+| `farmall lint [options]`  | Run configured stages and fail on error diagnostics without applying the plan.    |
+| `farmall check [options]` | Report diagnostics, actions, conflicts, and drift without writing.                |
+| `farmall diff [options]`  | Print deterministic file differences without writing.                             |
+
+`pull`, `sync`, `lint`, `check`, and `diff` accept `--config <path>`, `--pipeline <name>`, and `--json`. The default pipeline is `default`, except `pull`, which defaults to `pull`.
+
+Full documentation is in the repository [docs](https://github.com/thebytefarm/farmall/tree/main/docs).
 
 ## License
 

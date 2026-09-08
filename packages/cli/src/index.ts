@@ -1,55 +1,21 @@
 #!/usr/bin/env node
-import { parseArgs } from "node:util";
+import { createRequire } from "node:module";
 
-const VERSION = "0.0.1";
+import { cli } from "maltty";
 
-const SYNC_TARGETS = ["skills", "rules", "subagents", "agents"] as const;
+import { commands } from "./commands/index.ts";
 
-const BANNER = "farmall — one source of truth for all your AI coding agents";
+const packageMetadata = createRequire(import.meta.url)("../package.json") as Readonly<{
+  version: string;
+}>;
 
-const HELP = `${BANNER}
-
-  Status: WIP. Nothing here syncs yet — this is a placeholder release
-  reserving the name while the real tool grows.
-
-Usage
-  farmall <command> [options]
-
-Commands (planned)
-  sync <${SYNC_TARGETS.join("|")}>   Sync agent config out to every platform
-  lint                                Lint skills for cross-platform support
-
-Options
-  -v, --version                       Print version
-  -h, --help                          Show this help
-`;
-
-const write = (stream: NodeJS.WriteStream, text: string): void => {
-  stream.write(text.endsWith("\n") ? text : `${text}\n`);
-};
-
-const main = (argv: readonly string[]): number => {
-  const { values, positionals } = parseArgs({
-    args: [...argv],
-    allowPositionals: true,
-    options: {
-      version: { type: "boolean", short: "v" },
-      help: { type: "boolean", short: "h" },
-    },
-  });
-
-  if (values.version) {
-    write(process.stdout, VERSION);
-    return 0;
-  }
-
-  if (values.help || positionals.length === 0) {
-    write(process.stdout, HELP);
-    return 0;
-  }
-
-  write(process.stdout, `farmall is still WIP — "${positionals.join(" ")}" isn't wired up yet.`);
-  return 0;
-};
-
-process.exit(main(process.argv.slice(2)));
+await cli({
+  name: "farmall",
+  version: packageMetadata.version,
+  description: "Compile portable agent configuration into every tool you use",
+  help: {
+    header: "farmall: configurable agent artifacts in, native agent configuration out",
+    footer: "Every source and output is a plugin. Nothing is tied to .farmall/.",
+  },
+  commands,
+});

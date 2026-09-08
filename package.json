@@ -1,6 +1,6 @@
 {
   "name": "farmall-monorepo",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,25 +9,28 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "lint": "oxlint",
-    "format": "oxfmt",
-    "format:check": "oxfmt --check",
-    "validate": "oxfmt --check && oxlint && turbo run typecheck test",
+    "format": "oxfmt . '!**/.scratchpad/**' '!**/.serena/**'",
+    "format:check": "oxfmt --check . '!**/.scratchpad/**' '!**/.serena/**'",
+    "validate": "pnpm format:check && oxlint && turbo run typecheck test",
     "docs:dev": "ciderpress dev",
     "docs:build": "ciderpress build",
-    "docs:check": "ciderpress check"
+    "docs:check": "ciderpress check",
+    "pack:dry-run": "pnpm --filter @farmall/core pack --dry-run && pnpm --filter farmall pack --dry-run",
+    "test:package-consumer": "pnpm --filter farmall test:package-consumer"
   },
   "devDependencies": {
-    "@types/node": "^26.1.0",
+    "@types/node": "^26.4.1",
     "@typescript/native-preview": "7.0.0-dev.20260707.2",
-    "ciderpress": "1.0.0-rc.4",
-    "oxfmt": "^0.58.0",
-    "oxlint": "^1.73.0",
-    "turbo": "^2.10.4",
-    "typescript": "^6.0.3",
-    "vitest": "^3.2.4"
+    "@vitest/coverage-v8": "^5.0.0",
+    "ciderpress": "1.0.0-rc.15",
+    "oxfmt": "^0.66.0",
+    "oxlint": "^1.81.0",
+    "turbo": "^2.10.12",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.0"
   },
   "engines": {
-    "node": ">=24"
+    "node": ">=26"
   },
-  "packageManager": "pnpm@11.10.0"
+  "packageManager": "pnpm@12.3.4"
 }

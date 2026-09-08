@@ -39,7 +39,7 @@
   </g>
 
   <!-- Tagline -->
-  <text class="text dim" font-size="12" x="300" y="166" text-anchor="middle">Sync skills, rules, and subagents across every AI coding agent — then lint them for cross-platform support.</text>
+  <text class="text dim" font-size="12" x="300" y="166" text-anchor="middle">Keep shared agent artifacts together, then write only the mappings each tool supports.</text>
 
   <!-- Separator -->
   <line x1="16" y1="182" x2="584" y2="182" stroke="#313244" stroke-width="1" />

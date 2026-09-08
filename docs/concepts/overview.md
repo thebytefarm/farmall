@@ -1,43 +1,26 @@
-# Overview
+# How Farmall works
 
-`farmall` has one job: keep **one source of truth** for your agent config, and project it out to
-**every** agent you use — correctly.
+Farmall separates artifact discovery from output layout. The pipeline is explicit:
 
-## The model
-
-```
-                    ┌─────────────┐
-   your source ───▶ │   farmall   │ ───▶ Claude Code
-   of truth         │  sync+lint  │ ───▶ Cursor
-                    └─────────────┘ ───▶ Codex
-                          │          ───▶ Windsurf
-                          │          ───▶ Copilot
-                          ▼          ───▶ opencode
-                    cross-platform
-                    lint report
+```text
+sources -> transforms -> outputs -> lint -> plan
+                                      |
+                                      +-> sync or pull applies
+                                      +-> check or diff stops
 ```
 
-## What it syncs
+Sources append emissions in config order. Each transform receives the current emission set and replaces it with its result. Output plugins receive the transformed emissions and return desired files. Lint plugins inspect the same transformed emissions. Diagnostics from every stage are collected, adjusted by severity overrides, and sorted before the core creates a plan.
 
-| Target        | What it is                                                             |
-| ------------- | ---------------------------------------------------------------------- |
-| **skills**    | reusable agent skills (`SKILL.md` and friends)                         |
-| **rules**     | project rules — `CLAUDE.md`, `AGENTS.md`, `.cursorrules`, and variants |
-| **subagents** | subagent definitions                                                   |
-| **agents**    | agent-level config written to each tool's expected location            |
+## Emissions
 
-## The part that matters: lint
+An `Artifact` is normalized content with a kind, stable ID, name, source path, parsed frontmatter metadata, and bundled files. A `DirectOutput` names one output and carries files that must stay native.
 
-Copying files everywhere is the easy half. The hard half is knowing whether the copy actually
-_works_ on each target. `farmall lint` is built for exactly this:
+Sources may return either form. Transforms may change or filter both forms. Output plugins return `DesiredFile` records, not filesystem writes.
 
-- **Trigger compatibility** — does the skill's description fire on each agent, or only on the one you
-  wrote it for?
-- **Frontmatter drift** — which fields does each agent honor, and which does it silently drop?
-- **Portability** — will a subagent written for one tool run on another at all?
+## Plans
 
-Sync gets your config _there_. Lint tells you whether it will _behave_ once it arrives.
+The planner compares desired files with the working tree and ownership manifest. Each action is `create`, `update`, `delete`, `noop`, or `conflict`.
 
-## Supported platforms
+Managed files can be updated or removed only while their content still matches the digest Farmall recorded. Create-only files never enter the ownership manifest. An existing create-only destination is accepted only when its content is already identical.
 
-Claude Code · Cursor · Codex · Windsurf · Copilot · opencode — with more as the ecosystem grows.
+Read [pipelines](./pipelines.md), [artifact layout](./artifacts.md), and [ownership and safety](./ownership-and-safety.md) for the full contracts.

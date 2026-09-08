@@ -1,7 +1,7 @@
 {
   "name": "farmall",
-  "version": "0.0.1",
-  "description": "One source of truth for all your AI coding agents — sync skills, rules, and subagents across Claude Code, Cursor, Codex, and more, then lint them for cross-platform support. WIP.",
+  "version": "0.0.2",
+  "description": "Compile shared agent instructions, rules, skills, and subagents into platform-native files.",
   "keywords": [
     "agent",
     "agents",
@@ -31,7 +31,10 @@
     "farmall": "./dist/index.js"
   },
   "files": [
-    "dist",
+    "dist/**/*.d.ts",
+    "dist/**/*.js",
+    "!dist/**/*.test.*",
+    "LICENSE",
     "README.md"
   ],
   "type": "module",
@@ -39,11 +42,25 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsgo -p tsconfig.json",
+    "build": "node --eval \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsgo -p tsconfig.json",
     "typecheck": "tsgo --noEmit -p tsconfig.json",
-    "dev": "node --watch src/index.ts"
+    "dev": "node src/index.ts",
+    "prepack": "pnpm --filter @farmall/core build && pnpm build",
+    "test": "vitest run --exclude src/package-consumer.test.ts",
+    "test:package-consumer": "vitest run src/package-consumer.test.ts"
+  },
+  "dependencies": {
+    "@farmall/core": "workspace:*",
+    "ink": "^7.1.1",
+    "maltty": "1.0.0-rc.2",
+    "massaman": "^0.5.1",
+    "react": "^19.2.8",
+    "zod": "^4.5.4"
   },
   "devDependencies": {
-    "@types/node": "^26.1.0"
+    "@types/node": "^26.4.1"
+  },
+  "engines": {
+    "node": ">=26"
   }
 }

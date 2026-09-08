@@ -1,34 +1,39 @@
 # Introduction
 
-`farmall` is one source of truth for **all** your AI coding agents.
+Farmall compiles agent configuration through named pipelines. A pipeline reads normalized artifacts or an existing platform layout, runs optional transforms and lint checks, then asks output plugins for desired files.
 
-You write a skill, a rule, or a subagent once — `farmall` syncs it out to Claude Code, Cursor, Codex,
-Windsurf, Copilot, and opencode, then **lints it for cross-platform support** so it actually behaves
-the same everywhere instead of silently degrading on the agents that don't understand it.
+The core compares those desired files with the working tree and `.farmall-state.json`. Only `sync`, `pull`, and `init` apply a plan. `check` and `diff` stop after planning.
 
-> We don't ~~farm~~ **agent** some.
-> We ~~farm~~ **agent** all.
+## What Farmall manages
 
-## Why it exists
+Farmall recognizes four normalized artifact kinds:
 
-Keeping agent config in sync across tools is a real chore, and most of the sync problem is already
-solved well by tools like [rulesync](https://github.com/dyoshikawa/rulesync) and
-[ruler](https://github.com/intellectronica/ruler). The part **nobody does well yet** — and the reason
-`farmall` exists — is the cross-agent _quality_ layer:
+| Kind         | Default source                                                           |
+| ------------ | ------------------------------------------------------------------------ |
+| Instructions | `agent-config/AGENTS.md`                                                 |
+| Rules        | `agent-config/rules/**/*.md`                                             |
+| Skills       | `agent-config/skills/**/SKILL.md` and every file in each skill directory |
+| Subagents    | `agent-config/subagents/**/*.md`                                         |
 
-- **Will this skill actually trigger** on Codex the way it does on Claude?
-- **Which frontmatter fields get silently dropped** per agent?
-- **Are your subagents portable**, or do they only work in one tool?
+Outputs are platform-specific. Claude Code supports all four built-in mappings. Other platforms omit one or more mappings. Farmall emits `farmall/unsupported-artifact` warnings for those gaps and leaves the unsupported files unwritten.
 
-`farmall` treats your agent config as source you can lint, not just files you copy around.
+## Native files stay native
 
-## Status
+Some files do not have a portable representation. Put them under the named output tree:
 
-Early and intentionally minimal. The name is reserved on npm, the scaffold is live, and the real
-commands are landing next. Follow along.
+```text
+agent-config/
+  outputs/
+    claude-code/
+      .claude/settings.json
+    codex/
+      .codex/config.toml
+```
 
-## Why "farmall"?
+`farmall:source` emits these as `DirectOutput` values. An output plugin consumes only direct outputs whose name matches its `output` option. The file path and content pass through unchanged beneath the output root.
 
-The original Farmall tractor (International Harvester, 1924) earned its name because it could _farm
-all_ the jobs on a farm — not just one. Same energy: one tool that tends **all** your agents, not
-some.
+Farmall does not convert Claude settings into Codex settings or infer a common settings schema.
+
+## Why the tractor name
+
+International Harvester introduced the Farmall tractor as one machine for the varied work on a farm. This project uses the same practical idea for agent configuration while keeping each tool's actual file conventions visible.

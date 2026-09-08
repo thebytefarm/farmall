@@ -1,0 +1,27 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "rules": {
+    "no-param-reassign": "error",
+    "no-restricted-globals": [
+      "error",
+      {
+        "name": "Map",
+        "message": "Use Massaman object or array operations instead."
+      },
+      {
+        "name": "Set",
+        "message": "Use Massaman array operations instead."
+      },
+      {
+        "name": "WeakMap",
+        "message": "Use immutable data flow instead."
+      },
+      {
+        "name": "WeakSet",
+        "message": "Use immutable data flow instead."
+      }
+    ],
+    "no-ternary": "error",
+    "no-var": "error"
+  }
+}

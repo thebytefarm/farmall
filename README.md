@@ -1,45 +1,50 @@
-<div align="center">
-  <img src="https://placehold.co/1200x300/0d1117/e6edf3?text=farmall" alt="farmall" width="90%" />
-  <p><strong>Farm all your agents.</strong></p>
-  <p>One source of truth for every AI coding agent — sync skills, rules & subagents, then lint them for cross-platform support.</p>
+# farmall
 
-<a href="https://www.npmjs.com/package/farmall"><img src="https://img.shields.io/npm/v/farmall" alt="npm version" /></a>
-<a href="https://github.com/thebytefarm/farmall/blob/main/LICENSE"><img src="https://img.shields.io/github/license/thebytefarm/farmall" alt="License" /></a>
+Compile shared agent instructions, rules, skills, and subagents into the native files used by each supported tool.
 
-<a href="https://github.com/thebytefarm/farmall/tree/main/docs">📖 Documentation</a> &nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp; <a href="https://github.com/thebytefarm/farmall/issues">🐛 Issues</a>
+Farmall runs configurable source, transform, lint, and output stages. It preserves files that have no Farmall ownership record and reports unsupported platform mappings instead of inventing conversions.
 
-</div>
+## Install
 
-> **WIP** — the name is reserved, the scaffold is live, and the real commands are landing next.
+```bash
+npm install --global farmall
+```
 
-`farmall` keeps your **skills**, **rules**, and **subagents** in sync across Claude Code, Cursor,
-Codex, Windsurf, Copilot, and opencode — then **lints them for cross-platform support**, so a skill
-you write once actually _triggers_ everywhere instead of silently dropping fields on the agents that
-don't understand it.
+The package version in this workspace is `0.0.2`. The current implementation includes `init`, `pull`, `sync`, `lint`, `check`, and `diff`.
 
-> We don't ~~farm~~ **agent** some.
-> We ~~farm~~ **agent** all.
+## Quick use
+
+```bash
+farmall init
+
+# Edit agent-config/AGENTS.md, rules/, skills/, and subagents/.
+farmall check
+farmall sync
+```
+
+`farmall init` creates `farmall.config.mjs` and the default `agent-config/` source directory. `check` and `diff` calculate the same plan as `sync` without writing files.
+
+See the [quick start](./docs/getting-started/quick-start.md), [configuration reference](./docs/reference/configuration.md), and [platform matrix](./docs/concepts/platforms.md).
 
 ## Packages
 
-| Package                     | Description                |
-| --------------------------- | -------------------------- |
-| [`farmall`](./packages/cli) | The CLI. Published to npm. |
-| `@farmall/core`             | Internal engine (private). |
+| Package                     | Purpose                                               |
+| --------------------------- | ----------------------------------------------------- |
+| [`farmall`](./packages/cli) | Command-line interface                                |
+| `@farmall/core`             | Reusable pipeline, plugin, planning, and apply engine |
 
 ## Develop
 
 ```bash
 pnpm install
-pnpm build       # tsgo build all packages
-pnpm validate    # oxfmt + oxlint + typecheck + test
-pnpm --filter farmall dev
+pnpm build
+pnpm validate
+pnpm --filter farmall dev -- --help
 
-pnpm docs:dev    # run the ciderpress docs site locally
-pnpm docs:build  # build the docs site
+pnpm docs:dev
+pnpm docs:check
+pnpm docs:build
 ```
-
-Part of [thebytefarm](https://github.com/thebytefarm).
 
 ## License
 
